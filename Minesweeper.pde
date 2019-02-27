@@ -22,7 +22,8 @@ void setup ()
         }
     }
 
-    setBombs();
+    while(bombs.size()<50)
+        setBombs();
 }
 public void setBombs()
 {
@@ -41,8 +42,15 @@ public void draw ()
 }
 public boolean isWon()
 {
-    //your code here
-    return false;
+    for(int i=0; i<NUM_ROWS; i++){
+        for(int j=0; j<NUM_COLS; j++){
+            if(!buttons[i][j].isClicked()){
+                if(!bombs.contains(buttons[i][j]))
+                    return false;
+            }
+        }
+    }
+    return true;
 }
 public void displayLosingMessage()
 {
@@ -82,15 +90,21 @@ public class MSButton
     }
     // called by manager
     
-    public void mousePressed () 
+    public void mousePressed() 
     {
+        boolean wasClicked = isClicked();
         clicked = true;
         if(mouseButton==RIGHT){
             if(marked){
-                marked=false;
+                if (!wasClicked) {
+                    clicked=false;
+                    marked=false;
+                }
             }else{
-                marked=true;
-                clicked=false;
+                if(!wasClicked){
+                    marked=true;
+                    clicked=false;
+                }
             }
         }else if (bombs.contains( this )) {
             displayLosingMessage();
@@ -98,28 +112,36 @@ public class MSButton
             setLabel("" + countBombs(r,c));
         }else{
             if (isValid(r-1,c-1)) {
-                buttons[r-1][c-1].mousePressed();
+                if(!buttons[r-1][c-1].isClicked())
+                    buttons[r-1][c-1].mousePressed();
             }
             if (isValid(r-1,c)) {
-                buttons[r-1][c].mousePressed();
+                if(!buttons[r-1][c].isClicked())
+                    buttons[r-1][c].mousePressed();
             }
             if (isValid(r-1,c+1)) {
-                buttons[r-1][c+1].mousePressed();
+                if(!buttons[r-1][c+1].isClicked())
+                    buttons[r-1][c+1].mousePressed();
             }
             if (isValid(r,c-1)) {
-                buttons[r][c-1].mousePressed();
+                if(!buttons[r][c-1].isClicked())
+                    buttons[r][c-1].mousePressed();
             }
             if (isValid(r,c+1)) {
-                buttons[r][c+1].mousePressed();
+                if(!buttons[r][c+1].isClicked())
+                    buttons[r][c+1].mousePressed();
             }
             if (isValid(r+1,c-1)) {
-                buttons[r+1][c-1].mousePressed();
+                if(!buttons[r+1][c-1].isClicked())
+                    buttons[r+1][c-1].mousePressed();
             }
             if (isValid(r+1,c)) {
-                buttons[r+1][c].mousePressed();
+                if(!buttons[r+1][c].isClicked())
+                    buttons[r+1][c].mousePressed();
             }
             if (isValid(r+1,c+1)) {
-                buttons[r+1][c+1].mousePressed();
+                if(!buttons[r+1][c+1].isClicked())
+                    buttons[r+1][c+1].mousePressed();
             }
         }
     }
