@@ -5,6 +5,7 @@ private static final int NUM_ROWS = 20;
 private static final int NUM_COLS = 20;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> bombs = new ArrayList <MSButton>(); //ArrayList of just the minesweeper buttons that are mined
+private boolean notLost = true;
 
 void setup ()
 {
@@ -42,6 +43,8 @@ public void draw ()
 }
 public boolean isWon()
 {
+    if(!notLost)
+        return false;
     for(int i=0; i<NUM_ROWS; i++){
         for(int j=0; j<NUM_COLS; j++){
             if(!buttons[i][j].isClicked()){
@@ -54,11 +57,31 @@ public boolean isWon()
 }
 public void displayLosingMessage()
 {
-    //your code here
+    for(int i=0; i<bombs.size(); i++){
+        if(!bombs.get(i).isClicked()){
+            bombs.get(i).mousePressed();
+        }
+    }
+    buttons[9][5].setLabel("Y");
+    buttons[9][6].setLabel("o");
+    buttons[9][7].setLabel("u");
+    buttons[9][8].setLabel(" ");
+    buttons[9][9].setLabel("L");
+    buttons[9][10].setLabel("o");
+    buttons[9][11].setLabel("s");
+    buttons[9][12].setLabel("e");
+    notLost = false;
 }
 public void displayWinningMessage()
 {
-    //your code here
+    buttons[9][5].setLabel("Y");
+    buttons[9][6].setLabel("o");
+    buttons[9][7].setLabel("u");
+    buttons[9][8].setLabel(" ");
+    buttons[9][9].setLabel("W");
+    buttons[9][10].setLabel("i");
+    buttons[9][11].setLabel("n");
+    buttons[9][12].setLabel("!");
 }
 
 public class MSButton
@@ -92,6 +115,8 @@ public class MSButton
     
     public void mousePressed() 
     {
+        if(!notLost || isWon())
+            return;
         boolean wasClicked = isClicked();
         clicked = true;
         if(mouseButton==RIGHT){
@@ -107,7 +132,8 @@ public class MSButton
                 }
             }
         }else if (bombs.contains( this )) {
-            displayLosingMessage();
+            if(!marked)
+               displayLosingMessage();
         }else if (countBombs(r, c)>0) {
             setLabel("" + countBombs(r,c));
         }else{
