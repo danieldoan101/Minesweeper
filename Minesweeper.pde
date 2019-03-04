@@ -11,7 +11,7 @@ void setup ()
 {
     size(400, 400);
     textAlign(CENTER,CENTER);
-    
+
     // make the manager
     Interactive.make( this );
     
@@ -23,7 +23,7 @@ void setup ()
         }
     }
 
-    while(bombs.size()<50)
+    while(bombs.size()<30)
         setBombs();
 }
 public void setBombs()
@@ -32,7 +32,6 @@ public void setBombs()
     int randCol = (int)(Math.random()*NUM_COLS);
     if(!bombs.contains(buttons[randRow][randCol]))
         bombs.add(buttons[randRow][randCol]);
-        println(randRow + ", " + randCol);
 }
 
 public void draw ()
@@ -121,15 +120,11 @@ public class MSButton
         clicked = true;
         if(mouseButton==RIGHT){
             if(marked){
-                if (!wasClicked) {
-                    clicked=false;
-                    marked=false;
-                }
+                clicked=wasClicked;
+                marked=false;
             }else{
-                if(!wasClicked){
-                    marked=true;
-                    clicked=false;
-                }
+                marked=true;
+                clicked=wasClicked;
             }
         }else if (bombs.contains( this )) {
             if(!marked)
@@ -243,5 +238,20 @@ public class MSButton
             }
         }
         return numBombs;
+    }
+}
+
+public void keyPressed() {
+    if(key=='r'){
+        notLost = true;
+        for (int i = 0; i < NUM_ROWS; ++i) {
+            for (int j = 0; j < NUM_COLS; ++j) {
+                buttons[i][j] = new MSButton(i,j);
+            }
+        }
+        while(bombs.size()>0)
+            bombs.remove(0);
+        while(bombs.size()<30)
+            setBombs();
     }
 }
